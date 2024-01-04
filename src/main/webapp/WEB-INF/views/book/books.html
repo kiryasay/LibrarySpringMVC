@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Доступные книги</h1>
+<div th:each="book : ${books}">
+    <a th:href = "@{/books/{id}(id = ${book.getId()})}" th:text ="${book.toString()}">user</a>
+</div>
+<br>
+<hr/>
+<form th:method="GET" th:action="@{books/new}">
+    <input type="submit" value="Создать человека">
+</form>
+</body>
+</html>

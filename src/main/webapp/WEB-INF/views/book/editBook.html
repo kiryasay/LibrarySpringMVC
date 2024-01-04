@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Person</title>
+</head>
+<body>
+<form th:method ="PATCH" th:action="@{/books/{id}(id = ${book.getId()})}" th:object = "${book}">
+    <label for="title">Введите название</label>
+    <input type = "text" th:field="*{title}" id="title"/>
+    <div style="color:darkred" th:if="${#fields.hasErrors('title')}" th:errors = "*{title}" >Error</div>
+    <br/>
+    <label for="author">Введите автора</label>
+    <input type = "text" th:field="*{author}" id="author"/>
+    <div style="color:darkred" th:if="${#fields.hasErrors('author')}" th:errors = "*{author}" >Error</div>
+    <br/>
+    <label for="age">Введите возраст</label>
+    <input type = "text" th:field="*{age}" id="age"/>
+    <div style="color:darkred" th:if="${#fields.hasErrors('age')}" th:errors = "*{age}" >Error</div>
+    <br/>
+    <hr/>
+    <input type ="submit" value="Update!"/>
+</form>
+</body>
+</html>
