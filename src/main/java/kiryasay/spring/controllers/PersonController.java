@@ -27,13 +27,9 @@ public class PersonController {
         this.personValidator = personValidator;
         this.bookDao = bookDao;
     }
-    @GetMapping("/head")
-    public String header()
-    {
-        return "assist/header";
-    }
     @GetMapping()
     public String persons(Model model){
+        System.out.println(personDAO.allPeople());
         model.addAttribute("persons", personDAO.allPeople());
         return "person/persons";
     }
@@ -46,8 +42,6 @@ public class PersonController {
     public String showPerson(@PathVariable("id") int id,
                              Model model){
         model.addAttribute("person", personDAO.show(id));
-       // model.addAttribute("books", Book.createList(bookDao.personBooks(id)));
-        model.addAttribute("books", bookDao.personBooks(id));
         System.out.println(bookDao.personBooks(id));
         return "person/personInfo";
     }

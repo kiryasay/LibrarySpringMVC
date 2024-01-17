@@ -8,9 +8,9 @@
 <p th:text="${person.getName() + ', ' + person.getAge()}">VALUE</p>
 <p th:text="${person.getId()}">VALUE</p>
 <hr/>
-<p th:if = "${ #lists.isEmpty(books)}" th:text = " 'Человек еще не взял ни одной книги ' " >text</p>
-<div th:if = "${not #lists.isEmpty(books)}" th:text = "'Книги'"></div>
-<div th:if = "${not #lists.isEmpty(books)}" th:each = "book : ${books}">
+<p th:if = "${ #lists.isEmpty(person.getBooks())}" th:text = " 'Человек еще не взял ни одной книги ' " >text</p>
+<div th:if = "${not #lists.isEmpty(person.getBooks())}" th:text = "'Книги'"></div>
+<div th:if = "${not #lists.isEmpty(person.getBooks())}" th:each = "book : ${person.getBooks()}">
     <p th:text="${book.toString()}">text</p>
 </div>
 <hr/>

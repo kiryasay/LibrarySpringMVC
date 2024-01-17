@@ -32,7 +32,7 @@ public class BookController {
     public String bookInfo(@PathVariable("id") int id,
                            Model model){
         model.addAttribute("book", bookDao.show(id));
-        model.addAttribute("owner", personDAO.show(bookDao.show(id).getOwnerId()));
+        model.addAttribute("owner", bookDao.getOwner(id));
         model.addAttribute("person", new Person());
         model.addAttribute("persons", personDAO.allPeople());
         return "book/bookInfo";

@@ -1,36 +1,66 @@
 package kiryasay.spring.dao;
 
 import kiryasay.spring.models.Person;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class PersonDAO {
-    private final JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
     @Autowired
-    public PersonDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public PersonDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
+    @Transactional(readOnly = true)
+    public List<Person> allPeople(){
+        Session session = sessionFactory.getCurrentSession();
 
-    public List<Person> allPeople(){ return jdbcTemplate.query("SELECT * FROM Person", new PersonMapper());}
+        //hibernate code
+        List<Person> people = session.createQuery("SELECT p FROM Person p", Person.class).getResultList();
 
+        return people;
+    }
+    @Transactional(readOnly = true)
     public Person show(int id){
-        return jdbcTemplate.query("SELECT * FROM Person WHERE person_id = ?", new Object[]{id}, new PersonMapper()).stream().findAny().orElse(null);
+
+        Session session = sessionFactory.getCurrentSession();
+        Person person = session.get(Person.class, id);
+        person.setBooks(person.getBooks());
+        return person;
     }
+    @Transactional(readOnly = true)
     public Optional<Person> check(String name, int age){
-        return jdbcTemplate.query("SELECT * FROM Person WHERE person_name = ? AND person_age = ?", new Object[]{name, age}, new  BeanPropertyRowMapper<>(Person.class)).stream().findAny();
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM Person WHERE age = :personAge and name = :personName", Person.class)
+                .setParameter("personAge",age ).setParameter("personName", name).uniqueResultOptional();
+           }
+
+    @Transactional()
+    public void delete(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        Person person = session.get(Person.class, id);
+        session.remove(person);
     }
-    public void delete(int id) { jdbcTemplate.update("DELETE FROM Person WHERE person_id = ?", id);}
-    public void update(int id, Person person) {jdbcTemplate.update("UPDATE Person SET person_name = ?, person_age = ? WHERE person_id = ?", person.getName(), person.getAge(), id );}
+    @Transactional()
+    public void update(int id, Person person) {
+        Session session = sessionFactory.getCurrentSession();
+        Person temp = session.get(Person.class, id);
+        temp.setName(person.getName());
+        temp.setAge(person.getAge());
+
+    }
+    @Transactional()
     public void save(Person person)
     {
-        jdbcTemplate.update("INSERT INTO Person(person_name, person_age) VALUES(?,?)",
-                person.getName(), person.getAge());
+        Session session = sessionFactory.getCurrentSession();
+        session.save(person);
     }
 
 }
