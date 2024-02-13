@@ -1,37 +1,37 @@
 package kiryasay.spring.models;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "Person")
 public class Person {
-    @Pattern( regexp = "[А-Я][а-я]+ [А-Я][а-я]+ [А-Я][а-я]+", message = "Укажите полное ФИО")
-    @Column(name = "person_name")
-    private String name;
-
-    //@Pattern(regexp = "\\d{4}", message = "It`s not your date of birthday")
-    @Min(value = 1000, message = "Укажите год рождения")
-    @Column(name = "person_age")
-    private int age;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "person_id")
+    @Column(name = "id")
     int id;
+    @Pattern( regexp = "[А-Я][а-я]+ [А-Я][а-я]+ [А-Я][а-я]+", message = "Укажите полное ФИО")
+    @Column(name = "name")
+    private String name;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    //@Pattern(regexp = "\\d{4}", message = "It`s not your date of birthday")
+    @Column(name = "date_of_birth")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfBirth;
+
+    @OneToMany(mappedBy = "owner")
     private List<Book> books;
 
-    public Person(String name, int age) {
+    public Person(String name, Date dateOfBirth) {
         this.name = name;
-        this.age = age;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Person() {}
@@ -42,14 +42,6 @@ public class Person {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public int getId() {
@@ -67,6 +59,20 @@ public class Person {
     public void setBooks(List<Book> books) {
         this.books = books;
     }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    @Override
+    public String toString() {
+        return getName() + " " + getDateOfBirth();
+    }
+
     public void addBook(Book book)
     {
         if(this.books == null)
@@ -75,32 +81,4 @@ public class Person {
         book.setOwner(this);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Person person = (Person) o;
-
-        if (age != person.age) return false;
-        if (id != person.id) return false;
-        return Objects.equals(name, person.name);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + age;
-        result = 31 * result + id;
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                ", id=" + id +
-                '}';
-    }
 }

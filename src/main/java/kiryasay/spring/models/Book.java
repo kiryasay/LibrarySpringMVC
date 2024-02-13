@@ -1,48 +1,54 @@
 package kiryasay.spring.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "Book")
 public class Book {
-    @NotNull()
-    @Pattern(regexp = "[А-я ][а-я ]+")
-    @Column(name = "book_title")
-    private String title;
-    @Pattern( regexp = "[А-Я][а-я]+ [А-Я][а-я]+", message = "Введите фамилию и имя автора")
-    @Column(name = "book_author")
-    private String author;
-
-    @Column(name = "book_age")
-    private int age;
 
     @Id
-    @Column(name = "book_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+    @NotNull()
+    @Pattern(regexp = "[А-я ][а-я ]+")
+    @Column(name = "title")
+    private String title;
+    @Pattern( regexp = "[А-Я][а-я]+ [А-Я][а-я]+", message = "Введите фамилию и имя автора")
+    @Column(name = "author")
+    private String author;
+
+    @Column(name = "date_of_create")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfCreate;
+
+    @Column(name = "taked_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takeAt;
+
+    @Transient
+    private boolean overdue;
 
     @ManyToOne()
-    @JoinColumn(name = "person_id", referencedColumnName = "person_id")
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
 
-
-    public Book(String title, String author, int age, int id) {
+    public Book(String title, String author, Date dateOfCreate) {
         this.title = title;
         this.author = author;
-        this.age = age;
-        this.id = id;
+        this.dateOfCreate = dateOfCreate;
     }
-    public Book() {}
 
-    @Override
-    public String toString() {
-        return title + ", "+ author + ", " + age + "\n";
-    }
+    public Book() {}
 
     public String getTitle() {
         return title;
@@ -60,12 +66,12 @@ public class Book {
         this.author = author;
     }
 
-    public int getAge() {
-        return age;
+    public Date getDateOfCreate() {
+        return dateOfCreate;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setDateOfCreate(Date dateOfCreate) {
+        this.dateOfCreate = dateOfCreate;
     }
 
     public int getId() {
@@ -84,25 +90,24 @@ public class Book {
         this.owner = owner;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public Date getTakeAt() {
+        return takeAt;
+    }
 
-        Book book = (Book) o;
+    public void setTakeAt(Date takeAt) {
+        this.takeAt = takeAt;
+    }
 
-        if (age != book.age) return false;
-        if (id != book.id) return false;
-        if (!Objects.equals(title, book.title)) return false;
-        return Objects.equals(author, book.author);
+    public boolean isOverdue() {
+        return overdue;
+    }
+
+    public void setOverdue(boolean overdue) {
+        this.overdue = overdue;
     }
 
     @Override
-    public int hashCode() {
-        int result = title != null ? title.hashCode() : 0;
-        result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + age;
-        result = 31 * result + id;
-        return result;
+    public String toString() {
+        return getTitle() + ", " + getAuthor() + ", " + getDateOfCreate();
     }
 }

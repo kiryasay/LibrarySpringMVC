@@ -9,14 +9,14 @@
 <p th:text="${book.getId()}">VALUE</p>
 <br/>
 <hr/>
-<div th:if="${owner != null}">
-    <p th:text = "${owner.getName()}"></p>
+<div th:if="${book.getOwner() != null}">
+    <p th:text = "${book.getOwner().getName()}"></p>
     <form th:method="POST" th:action = "@{/books/{id}/release(id = ${book.getId()})}">
         <input type="submit" value="Освободить">
     </form>
 </div>
 
-<div th:if="${owner == null}">
+<div th:if="${book.getOwner() == null}">
     <p th:text="'Книга свободна'"></p>
     <form th:method="POST" th:action="@{/books/{id}/addOwner(id = ${book.getId()})}">
         <label for ="person">Выберите человека</label>

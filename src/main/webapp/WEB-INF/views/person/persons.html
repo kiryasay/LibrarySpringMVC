@@ -7,12 +7,12 @@
 <body>
 <h1>Клиенты библиотеки</h1>
 <div th:each="person : ${persons}">
-    <a th:href = "@{/people/{id}(id = ${person.getId()})}" th:text ="${person.getName() + ', ' + person.getAge()}">user</a>
+    <a th:href = "@{/people/{id}(id = ${person.getId()})}" th:text ="${person.toString()}">user</a>
 </div>
 <br>
 <hr/>
 <form th:method="GET" th:action="@{people/new}">
-    <input type="submit" value="Создать человека">
+    <input type="submit" value="Добавить  человека">
 </form>
 </body>
 </html>

@@ -14,9 +14,9 @@
     <input type = "text" th:field="*{author}" id="author"/>
     <div style="color:darkred" th:if="${#fields.hasErrors('author')}" th:errors = "*{author}" >Error</div>
     <br/>
-    <label for="age">Введите год создания </label>
-    <input type = "text" th:field="*{age}" id="age"/>
-    <div style="color:darkred" th:if="${#fields.hasErrors('age')}" th:errors = "*{age}" >Error</div>
+    <label for="date_of_create">Введите год создания </label>
+    <input type = "text" th:field="*{dateOfCreate}" id="date_of_create"/>
+    <div style="color:darkred" th:if="${#fields.hasErrors('dateOfCreate')}" th:errors = "*{dateOfCreate}" >Error</div>
     <br/>
     <hr/>
     <input type ="submit" value="Create!"/>
